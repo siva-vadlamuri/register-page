@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>form validation</title>
+    <link rel="stylesheet" href="./bootstrap-5.1.1-dist/css/bootstrap.css" />
+    <link
+      rel="stylesheet"
+      href="./bootstrap-5.1.1-dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="./fontawesome-free-5.15.4-web/css/all.css" />
+
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: url(https://t4.ftcdn.net/jpg/01/29/27/79/360_F_129277968_ebx6W45pOdbdy3kFxZtfpJcoIeiTwpkR.jpg);
+        /* filter: blur(4px); */
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      .input-container {
+        display: -ms-flexbox;
+        /* IE10 */
+        display: flex;
+        width: 100%;
+        margin-bottom: 15px;
+      }
+
+      .icon {
+        padding: 10px;
+        background: dodgerblue;
+        color: white;
+        min-width: 50px;
+        text-align: center;
+      }
+
+      .input-field {
+        width: 100%;
+        padding: 10px;
+        outline: none;
+      }
+
+      .input-field:focus {
+        border: 2px solid dodgerblue;
+      }
+      /* Set a style for the submit button */
+
+      #sub {
+        padding: 15px 20px;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        opacity: 0.9;
+        background-color: dodgerblue;
+      }
+
+      #sub:disabled {
+        /* //  background-color: rgba(0, 255, 255, 0.8);// */
+        background-color: rgb(129, 164, 199);
+        cursor: text;
+      }
+    </style>
+  </head>
+
+  <body>
+    <form style="max-width: 500px; margin: auto" novalidate id="login">
+      <h2 style="color: white; text-align: center; margin-top: 50px">
+        Register Form
+      </h2>
+      <div class="input-container">
+        <i class="fa fa-user icon"></i>
+        <input
+          class="input-field"
+          type="text"
+          placeholder="Username"
+          name="usrnm"
+          id="user"
+          required
+        />
+      </div>
+
+      <div class="input-container">
+        <i class="fa fa-envelope icon"></i>
+        <input
+          class="input-field"
+          type="text"
+          placeholder="Email"
+          name="email"
+          id="mail"
+          required
+        />
+      </div>
+
+      <div class="input-container">
+        <i class="fa fa-key icon"></i>
+        <input
+          class="input-field"
+          type="password"
+          placeholder="Password"
+          name="psw"
+          id="pass"
+          required
+        />
+      </div>
+      <div class="input-container">
+        <i class="fa fa-key icon"></i>
+        <input
+          class="input-field"
+          type="tel"
+          placeholder="Phone Number"
+          name="psw"
+          id="phone"
+          required
+        />
+      </div>
+
+      <button type="submit" id="sub">Register</button>
+    </form>
+
+    <script>
+      let username = document.querySelector("#user");
+      let password = document.querySelector("#pass");
+      let email = document.querySelector("#mail");
+      let phone = document.querySelector("#phone");
+      let sub = document.querySelector("#sub");
+      // Step-1
+      // Get The Values From Input fileds
+      // Convert into object
+      // Send the data
+
+      const sendTheDataToServer = async (obj) => {
+        // debugger;
+        console.log(JSON.stringify(obj));
+        const response = await fetch("http://localhost:3001/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // 'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(obj),
+        });
+        // console.log(response);
+        const data = await response.json();
+        console.log(data);
+        if (data.success) {
+          window.location.href = "https://www.achieversit.com/";
+        }
+      };
+
+      const convertToObject = (username, email, number, password) => {
+        const userObj = {
+          username,
+          email,
+          number,
+          password,
+        };
+        // console.log(userObj);
+        sendTheDataToServer(userObj);
+      };
+      const getTheDetails = (e) => {
+        e.preventDefault();
+
+        const nameValue = username.value;
+        const emailValue = email.value;
+        const phoneValue = phone.value;
+        const passwordValue = password.value;
+        convertToObject(nameValue, emailValue, phoneValue, passwordValue);
+        // console.log();
+      };
+      sub.addEventListener("click", getTheDetails);
+
+      // username
+      // const userFun = function(e) {
+      //     event.preventDefault();
+      //     let reg = /^[a-zA-Z]+$/;
+      //     if (!reg.test(username.value)) {
+      //         username.style.border = '3px solid red'
+      //         return false;
+
+      //     } else {
+      //         username.style.border = '3px solid green'
+      //             // sub.style.display = 'block'
+      //         return true;
+      //     }
+
+      // }
+      // username.addEventListener('keyup', userFun)
+      //     // password
+      // const psdFunc = function(e) {
+      //     event.preventDefault();
+      //     let regx = /^[0-9]+$/;
+      //     if (!regx.test(password.value)) {
+      //         password.style.border = '3px solid red'
+      //         return false;
+      //     } else {
+      //         password.style.border = '3px solid green'
+      //             //  sub.style.display = 'block'
+      //         return true
+      //     }
+
+      // }
+      // password.addEventListener('keyup', psdFunc)
+      //     // email
+      // const emilFun = function(e) {
+      //     event.preventDefault();
+      //     let re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      //     if (!re.test(email.value)) {
+      //         email.style.border = '3px solid red'
+      //         return false;
+      //     } else {
+      //         email.style.border = '3px solid green'
+      //             // sub.style.display = 'block'
+      //         return true;
+      //     }
+
+      // }
+      // email.addEventListener('keyup', emilFun)
+      //     //  submit button visible or buuton hide
+      // function content() {
+      //     const isPasswordValid = psdFunc();
+      //     //   console.log(isPasswordValid)
+      //     const isEmailValid = emilFun();
+      //     //  console.log(isEmailValid)
+      //     const isUserValid = userFun();
+      //     // console.log(isUserValid)
+
+      //     if (username.value.length > 4 && email.value.length > 8 && password.value.length > 6 && isUserValid && isEmailValid && isPasswordValid) {
+      //         sub.disabled = false
+      //         console.dir(sub)
+
+      //     } else {
+      //         console.log('it is else part')
+      //         sub.disabled = true
+      //     }
+
+      // }
+
+      // // click submit btn working process
+      // sub.addEventListener('click', function() {
+      //       event.preventDefault();
+      //       if (username.value == '') {
+      //           username.style.border = '3px solid red'
+      //           return true;
+
+      //       }
+
+      //       if (email.value == '') {
+      //           email.style.border = '3px solid red'
+      //           return true;
+      //       }
+      //       if (password.value == '' && password.value < 4) {
+      //           password.style.border = '3px solid red'
+      //           return true;
+      //       } else {
+
+      //           const file = {
+      //               Username: username.value,
+      //               password: password.value,
+      //               Email: email.value,
+
+      //           }
+      //           console.log((file))
+
+      //       }
+      //   })
+    </script>
+  </body>
+</html>
